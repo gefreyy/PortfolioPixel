@@ -8,6 +8,7 @@ const projectsContainer = document.querySelector('.projects-container');
 const techsAndToolsContainer = document.querySelector('.techs-and-tools-container');
 const contactContainter = document.querySelector('.contact-container');
 const aboutContainer = document.querySelector('.about-container');
+const closeBox = document.querySelectorAll('.close-box');
 
 const socialLinks = document.querySelectorAll('.social');
 
@@ -84,6 +85,8 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
+window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
 // Cuando el reproductor está listo
 function onPlayerReady(event) {
     event.target.setVolume(10);
@@ -154,7 +157,6 @@ function onPlayerStateChange(event) {
 
 
 // Logica para las secciones
-let clicked = false;
 let selectedItem = null;
 
 function showSection(showElement) {
@@ -265,7 +267,12 @@ items.forEach((item, index) => {
 
     item.addEventListener("click", () => {
         selectedItem = item;
-        showSection(allSections[index]);
+        if(selectedItem !== null) {
+            showSection(allSections[index]);
+        } else {
+            resetItems(items);
+        }
+        console.log(selectedItem);
     });
 });
 
@@ -306,23 +313,15 @@ contactForm.addEventListener("submit", (e) => {
     }, 1500);
 })
 
-import * as THREE from 'three';
+console.log(closeBox);
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
-
-const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
-
-camera.position.z = 5;
-
-function animate() {
-  renderer.render( scene, camera );
-}
-renderer.setAnimationLoop( animate );
+closeBox.forEach(box => {
+    box.addEventListener("click", () => {
+        allSections.forEach(el => el.classList.remove("active"));
+        optionCloseSound.currentTime = 0;
+        optionCloseSound.play();
+        activeSection = null;
+        selectedItem = null;
+        resetItems(items);
+    })
+})
